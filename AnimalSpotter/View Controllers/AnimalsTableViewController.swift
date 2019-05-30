@@ -12,14 +12,16 @@ class AnimalsTableViewController: UITableViewController {
     
     private var animalNames: [String] = []
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    let apiController = APIController()
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // transition to login view if conditions require
+        
+        if self.apiController.bearer == nil {
+            performSegue(withIdentifier: "LoginViewModalSegue", sender: self)
+        }
     }
 
     // MARK: - Table view data source
@@ -40,6 +42,13 @@ class AnimalsTableViewController: UITableViewController {
     // MARK: - Actions
     @IBAction func getAnimals(_ sender: UIBarButtonItem) {
         // fetch all animals from API
+        self.apiController.fetchAllAnimalNames { (Array) in
+            DispatchQueue.main.async {
+                self.animalNames = Array
+                self.tableView.reloadData()
+            }
+            
+        }
     }
     
     // MARK: - Navigation
@@ -48,9 +57,13 @@ class AnimalsTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowAnimalDetailSegue" {
             // inject dependencies
+        
         }
         else if segue.identifier == "LoginViewModalSegue" {
             // inject dependencies
+            if let loginVC = segue.destination as? LoginViewController {
+                loginVC.apiController = self.apiController
+            }
         }
     }
 }
