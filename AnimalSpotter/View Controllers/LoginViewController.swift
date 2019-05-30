@@ -44,7 +44,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let user = User(username: username, password: password)
             
             if loginType == .signUp {
-                apiController.signUp(user: user) { (error) in
+                apiController.signUp(with: user) { (error) in
                     if let error = error {
                         NSLog("Error occurred during sign up: \(error)")
                     } else {
@@ -61,7 +61,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             } else {
-                apiController.signIn(user: user) { (error) in
+                apiController.signIn(with: user) { (error) in
                     if let error = error {
                         NSLog("Error occurred during sign up: \(error)")
                     } else {

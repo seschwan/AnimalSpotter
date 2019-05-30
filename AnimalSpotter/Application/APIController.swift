@@ -14,7 +14,7 @@ enum HTTPMethod: String {
     case post = "POST"
 }
 
-enum NetowrkError: Error {
+enum NetworkError: Error {
     case noAuth
     case badAuth
     case otherError
@@ -25,35 +25,28 @@ enum NetowrkError: Error {
 class APIController {
     
     private let baseUrl = URL(string: "https://lambdaanimalspotter.vapor.cloud/api")!
-    
     var bearer: Bearer?
     
-    // create function for sign up
-    func signUp(user: User, completion: @escaping (Error?) -> ()) {
-        // create endpoint URL
-        let signUpURL = baseUrl.appendingPathComponent("users/signup")
+    func signUp(with user: User, completion: @escaping (Error?) -> ()) {
+        let signUpUrl = baseUrl.appendingPathComponent("users/signup")
         
-        // setup request
-        var request = URLRequest(url: signUpURL)
+        var request = URLRequest(url: signUpUrl)
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // Create a encoder
         let jsonEncoder = JSONEncoder()
-        
         do {
             let jsonData = try jsonEncoder.encode(user)
             request.httpBody = jsonData
         } catch {
-            NSLog("Error encoding user object \(error)")
+            print("Error encoding user object: \(error)")
             completion(error)
-            return // No point in continuing with an error
+            return
         }
-        
         URLSession.shared.dataTask(with: request) { (_, response, error) in
             if let response = response as? HTTPURLResponse,
                 response.statusCode != 200 {
-                completion(NSError(domain: "", code: response.statusCode, userInfo: nil))
+                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
                 return
             }
             
@@ -61,33 +54,34 @@ class APIController {
                 completion(error)
                 return
             }
+            
             completion(nil)
-        }.resume()
+            }.resume()
     }
     
-    // create function for sign in
-    func signIn(user: User, completion: @escaping (Error?) -> ()) {
-        let loginURL = baseUrl.appendingPathComponent("users/login")
+    func signIn(with user: User, completion: @escaping (Error?) -> ()) {
+        let loginUrl = baseUrl.appendingPathComponent("users/login")
         
-        var request = URLRequest(url: loginURL)
+        var request = URLRequest(url: loginUrl)
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let jsonEncoder = JSONEncoder()
-        
         do {
             let jsonData = try jsonEncoder.encode(user)
             request.httpBody = jsonData
         } catch {
-            NSLog("Error encoding user object \(error)")
+            print("Error encoding user object: \(error)")
             completion(error)
+            return
         }
-        
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let response = response as? HTTPURLResponse,
                 response.statusCode != 200 {
-                completion(NSError(domain: " ", code: response.statusCode, userInfo: nil))
+                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
+                return
             }
+            
             if let error = error {
                 completion(error)
                 return
@@ -99,126 +93,120 @@ class APIController {
             }
             
             let decoder = JSONDecoder()
-            
             do {
                 self.bearer = try decoder.decode(Bearer.self, from: data)
             } catch {
-                NSLog("Error decoding bearer object: \(error)")
+                print("Error decoding bearer object: \(error)")
                 completion(error)
                 return
             }
             
-        }.resume()
+            completion(nil)
+            }.resume()
     }
     
-    // Put an empty [Strings] for .failures
-    
-    // create function for fetching all animal names
     func fetchAllAnimalNames(completion: @escaping ([String]) -> Void) {
-        guard let bearer = self.bearer else {
-            completion([String()])//(.failure(.noAuth))
+        guard let bearer = bearer else {
+            completion([])
             return
         }
         
-        let allAnimalsURL = baseUrl.appendingPathComponent("animals/all")
+        let allAnimalsUrl = baseUrl.appendingPathComponent("animals/all")
         
-        var request = URLRequest(url: allAnimalsURL)
+        var request = URLRequest(url: allAnimalsUrl)
         request.httpMethod = HTTPMethod.get.rawValue
         request.addValue("Bearer \(bearer.token)", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let response = response as? HTTPURLResponse,
-                response.statusCode != 401 {
-                completion([String()])
+                response.statusCode == 401 {
+                completion([])
+                return
+            }
+            
+            if let _ = error {
+                completion([])
                 return
             }
             
             guard let data = data else {
-                completion([String()])
+                completion([])
                 return
             }
             
             let decoder = JSONDecoder()
-            
             do {
                 let animalNames = try decoder.decode([String].self, from: data)
-                completion([String()])
+                completion(animalNames)
             } catch {
-                NSLog("Error decoding animal objects \(error)")
-                completion([String()])
+                print("Error decoding animal objects: \(error)")
+                completion([])
                 return
             }
-            
-        }.resume()
+            }.resume()
     }
     
-    
-    
-    // create function to fetch details of animal
-    func fetchDetailsForAnimal(animalName: String, completion: @escaping (Animal?, Error?) -> Void) {
-        guard let bearer = self.bearer else {
-            completion(nil, NSError())
+    func fetchDetails(for animalName: String, completion: @escaping () -> Void) {
+        guard let bearer = bearer else {
+            completion()
             return
         }
         
-        let animalURL = baseUrl.appendingPathComponent("animals/\(animalName)")
+        let animalUrl = baseUrl.appendingPathComponent("animals/\(animalName)")
         
-        var request = URLRequest(url: animalURL)
+        var request = URLRequest(url: animalUrl)
         request.httpMethod = HTTPMethod.get.rawValue
         request.addValue("Bearer \(bearer.token)", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let response = response as? HTTPURLResponse,
-                response.statusCode != 401 {
-                completion(nil, NSError())
+                response.statusCode == 401 {
+                completion()
                 return
             }
             
-            if let error = error {
-                completion(nil, error)
+            if let _ = error {
+                completion()
                 return
             }
             
             guard let data = data else {
-                completion(nil, error)
+                completion()
                 return
             }
             
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .secondsSince1970
-            
             do {
                 let animal = try decoder.decode(Animal.self, from: data)
-                completion(nil, NSError())
+                completion()
             } catch {
-                NSLog(" Error decoding animal object: \(error)")
-                completion(nil, NSError())
+                print("Error decoding animal object: \(error)")
+                completion()
                 return
             }
-        }.resume()
+            }.resume()
     }
     
-    // create function to fetch image
-    func fetchImage(urlString: String, completion: @escaping ( UIImage?, NSError?) -> Void) {
+    func fetchImage(at urlString: String, completion: @escaping () -> Void) {
         let imageUrl = URL(string: urlString)!
         
         var request = URLRequest(url: imageUrl)
         request.httpMethod = HTTPMethod.get.rawValue
         
         URLSession.shared.dataTask(with: request) { (data, _, error) in
-            if let error = error {
-                completion(nil, NSError())
+            if let _ = error {
+                completion()
                 return
             }
             
             guard let data = data else {
-                completion(nil, NSError())
+                completion()
                 return
             }
-            let image = UIImage(data: data)
-            completion(image, nil)
             
-        }.resume()
+            let image = UIImage(data: data)!
+            completion()
+            }.resume()
     }
 }
-
