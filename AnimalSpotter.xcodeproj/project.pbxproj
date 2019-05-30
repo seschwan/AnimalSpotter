@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3538E9D229F6CD300686F06 /* Animal.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3538E9C229F6CD300686F06 /* Animal.swift */; };
+		B3538E9F229F6DCC00686F06 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3538E9E229F6DCC00686F06 /* User.swift */; };
+		B3538EA1229F6E1D00686F06 /* Bearer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3538EA0229F6E1D00686F06 /* Bearer.swift */; };
 		CEDCA57B22668AB2009EA535 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDCA57A22668AB2009EA535 /* AppDelegate.swift */; };
 		CEDCA58022668AB2009EA535 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDCA57E22668AB2009EA535 /* Main.storyboard */; };
 		CEDCA58222668AB2009EA535 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDCA58122668AB2009EA535 /* Assets.xcassets */; };
@@ -18,6 +21,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B3538E9C229F6CD300686F06 /* Animal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animal.swift; sourceTree = "<group>"; };
+		B3538E9E229F6DCC00686F06 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B3538EA0229F6E1D00686F06 /* Bearer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bearer.swift; sourceTree = "<group>"; };
 		CEDCA57722668AB2009EA535 /* AnimalSpotter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnimalSpotter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDCA57A22668AB2009EA535 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEDCA57F22668AB2009EA535 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,6 +47,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B3538E9B229F6A9C00686F06 /* StoryBoards */ = {
+			isa = PBXGroup;
+			children = (
+				CEDCA57E22668AB2009EA535 /* Main.storyboard */,
+				CEDCA58322668AB2009EA535 /* LaunchScreen.storyboard */,
+			);
+			path = StoryBoards;
+			sourceTree = "<group>";
+		};
 		CEDCA56E22668AB2009EA535 = {
 			isa = PBXGroup;
 			children = (
@@ -60,12 +75,11 @@
 		CEDCA57922668AB2009EA535 /* AnimalSpotter */ = {
 			isa = PBXGroup;
 			children = (
+				CEDCA5962266966C009EA535 /* Models */,
 				CEDCA59722669673009EA535 /* Application */,
 				CEDCA5982266967E009EA535 /* View Controllers */,
-				CEDCA5962266966C009EA535 /* Models */,
-				CEDCA57E22668AB2009EA535 /* Main.storyboard */,
+				B3538E9B229F6A9C00686F06 /* StoryBoards */,
 				CEDCA58122668AB2009EA535 /* Assets.xcassets */,
-				CEDCA58322668AB2009EA535 /* LaunchScreen.storyboard */,
 				CEDCA58622668AB2009EA535 /* Info.plist */,
 			);
 			path = AnimalSpotter;
@@ -74,6 +88,9 @@
 		CEDCA5962266966C009EA535 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B3538E9C229F6CD300686F06 /* Animal.swift */,
+				B3538E9E229F6DCC00686F06 /* User.swift */,
+				B3538EA0229F6E1D00686F06 /* Bearer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -168,11 +185,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3538EA1229F6E1D00686F06 /* Bearer.swift in Sources */,
 				CEDCA59A226697BD009EA535 /* APIController.swift in Sources */,
 				CEDCA59122668D0F009EA535 /* LoginViewController.swift in Sources */,
 				CEDCA58D22668B98009EA535 /* AnimalDetailViewController.swift in Sources */,
 				CEDCA57B22668AB2009EA535 /* AppDelegate.swift in Sources */,
 				CEDCA58F22668BCF009EA535 /* AnimalsTableViewController.swift in Sources */,
+				B3538E9D229F6CD300686F06 /* Animal.swift in Sources */,
+				B3538E9F229F6DCC00686F06 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,14 +339,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SBB8C9E36E;
 				INFOPLIST_FILE = AnimalSpotter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lambdaschool.AnimalSpotter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -336,14 +358,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SBB8C9E36E;
 				INFOPLIST_FILE = AnimalSpotter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lambdaschool.AnimalSpotter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
